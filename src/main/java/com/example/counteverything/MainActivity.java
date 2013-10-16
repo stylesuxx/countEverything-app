@@ -3,10 +3,12 @@ package com.example.counteverything;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -32,12 +36,6 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /*
-        // TODO do not execute networking in the main thread
-        StrictMode.ThreadPolicy policy = new StrictMode.
-        ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);*/
-
         mDbHelper = new DataAdapter(this);
         mDbHelper.createDatabase();
         mDbHelper.open();
@@ -76,7 +74,6 @@ public class MainActivity extends Activity {
 
         btnDelete = (Button) findViewById(R.id.btn_item_delete);
         btnDelete.setOnClickListener(deleteItem);
-
     }
 
     /**
@@ -93,7 +90,7 @@ public class MainActivity extends Activity {
                 String params = "?action=add&token=" + token + "&item=" + URLEncoder.encode(name, "utf-8") + "&amount=" + amount;
                 String url = prefs.getString("api_url", "") + params;
 
-                Log.v(TAG, name);
+                Log.v(TAG, "addItem >> " + name);
 
                 new Api(v.getContext()).execute(url);
             } catch (UnsupportedEncodingException e) {
@@ -187,15 +184,34 @@ public class MainActivity extends Activity {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 String amount = cursor.getString(cursor.getColumnIndex("amount"));
 
-                //set the properties for button
+                LinearLayout ll1 = new LinearLayout(this);
+                ll1.setPadding(0, 0, 0, 10);
+
+                RelativeLayout ll = new RelativeLayout(this);
+                //ll.setOrientation(LinearLayout.HORIZONTAL);
+                ll.setPadding(0, 0, 0, 30);
+                ll.setBackgroundResource(R.drawable.borderframe);
+                ll1.addView(ll);
+                layout.addView(ll1);
+                TextView tv = new TextView(this);
+                tv.setText(name);
+                tv.setTextSize(20);
+                ll.addView(tv);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+
+                // the add button
                 Button btnTag = new Button(this);
-                btnTag.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                btnTag.setText(name + "/" + amount);
+                btnTag.setLayoutParams(params);
+                btnTag.setText("+");
                 btnTag.setId(id);
+                btnTag.setRight(0);
+                btnTag.setTextSize(30);
+                btnTag.setBackgroundColor(Color.GREEN);
                 btnTag.setOnClickListener(addItem);
 
-                //add button to the layout
-                layout.addView(btnTag);
+                ll.addView(btnTag);
             }while(cursor.moveToNext());
         }
         cursor.close();
