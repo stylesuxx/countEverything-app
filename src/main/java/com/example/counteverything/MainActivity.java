@@ -53,13 +53,10 @@ public class MainActivity extends Activity {
         tabSpec.setIndicator("Main");
         tabhost.addTab(tabSpec);
 
-        /*
-        // TODO
         tabSpec = tabhost.newTabSpec("tabStats");
         tabSpec.setContent(R.id.tabStats);
         tabSpec.setIndicator("Stats");
         tabhost.addTab(tabSpec);
-        */
 
         tabSpec = tabhost.newTabSpec("tabManage");
         tabSpec.setContent(R.id.tabManage);
