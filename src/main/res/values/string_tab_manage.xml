@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<resources>
-    <string name="tab_manage_name">Name</string>
-    <string name="tab_manage_name_hint">Name of the item</string>
-    <string name="tab_manage_amount">Amount</string>
-    <string name="tab_manage_amount_hint">Amount in pieces or litre</string>
-    <string name="tab_manage_btn_add">Add item</string>
-</resources>

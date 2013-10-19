@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="tab_manage_title_add">Add Item</string>
+    <string name="tab_manage_title_name">Name</string>
+    <string name="tab_manage_hint_name">Name of the item</string>
+    <string name="tab_manage_title_amount">Amount</string>
+    <string name="tab_manage_hint_amount">Amount in pieces or litre</string>
+    <string name="tab_manage_btn_add">Add item</string>
+
+    <string name="tab_manage_title_delete">Delete Item</string>
+    <string name="tab_manage_btn_delete">Delete Item</string>
+</resources>
