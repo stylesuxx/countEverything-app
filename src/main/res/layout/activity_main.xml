@@ -30,13 +30,7 @@
                 android:layout_height="fill_parent">
 
                 <include layout="@layout/tab_main" />
-
-                <LinearLayout
-                    android:id="@+id/tabStats"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"></LinearLayout>
-
+                <include layout="@layout/tab_stats" />
                 <include layout="@layout/tab_manage" />
 
             </FrameLayout>
