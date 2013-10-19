@@ -3,77 +3,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabManage"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/tab_manage_title_add"
-        android:id="@+id/textView2"
-        android:layout_gravity="left|center_vertical" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/tab_manage_title_name"
-        android:id="@+id/manage_title_name"
-        android:layout_gravity="left|center_vertical" />
-
-    <EditText
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edit_manage_name"
-        android:hint="@string/tab_manage_hint_name"
-        android:lines="1" />
+        android:layout_height="fill_parent"
+        android:id="@+id/tab_manage_scroll" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/tab_manage_title_amount"
-        android:id="@+id/textView3" />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tabManageWrapper"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/activity_vertical_margin">
 
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edit_manage_amount"
-        android:hint="@string/tab_manage_hint_amount"
-        android:numeric="decimal"
-        android:lines="1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tab_manage_title_add"
+                android:id="@+id/textView2"
+                android:layout_gravity="left|center_vertical" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tab_manage_btn_add"
-        android:id="@+id/btn_settings"
-        android:layout_gravity="right|center_vertical" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/tab_manage_title_name"
+                android:id="@+id/manage_title_name"
+                android:layout_gravity="left|center_vertical" />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#000000" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_manage_name"
+                android:hint="@string/tab_manage_hint_name"
+                android:lines="1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/tab_manage_title_delete"
-        android:id="@+id/textView"
-        android:layout_gravity="left|center_vertical" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/tab_manage_title_amount"
+                android:id="@+id/textView3" />
 
-    <Spinner
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:spinnerMode="dialog" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_manage_amount"
+                android:hint="@string/tab_manage_hint_amount"
+                android:numeric="decimal"
+                android:lines="1" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tab_manage_btn_delete"
-        android:id="@+id/btn_item_delete"
-        android:layout_gravity="right|center_vertical" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_manage_btn_add"
+                android:id="@+id/btn_settings"
+                android:layout_gravity="right|center_vertical" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tab_manage_title_delete"
+                android:id="@+id/textView"
+                android:layout_gravity="left|center_vertical" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:spinnerMode="dialog" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_manage_btn_delete"
+                android:id="@+id/btn_item_delete"
+                android:layout_gravity="right|center_vertical" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
