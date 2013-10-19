@@ -16,8 +16,8 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <Preference android:title="@string/btn_title_test_config"
+    <Preference android:title="@string/pref_btn_title_test"
         android:key="test_settings"
-        android:summary="@string/btn_summary_test_config"/>
+        android:summary="@string/pref_btn_summary_test"/>
 
 </PreferenceScreen>
