@@ -43,7 +43,7 @@ public class SettingsActivity extends PreferenceActivity {
      * as a master/detail two-pane view on tablets. When true, a single pane is
      * shown on tablets.
      */
-    private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private static final boolean ALWAYS_SIMPLE_PREFS = true;
     private static final String TAG = "SettingsActivity";
 
     @Override
@@ -76,6 +76,7 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceToClick(findPreference("test_settings"));
     }
 
+
     /** {@inheritDoc} */
     @Override
     public boolean onIsMultiPane() {
@@ -104,28 +105,20 @@ public class SettingsActivity extends PreferenceActivity {
                 || !isXLargeTablet(context);
     }
 
+    /**
+     * Check settings when button is clicked in the preference screen.
+     */
     private static Preference.OnPreferenceClickListener sBindPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            String key = preference.getKey().toString();
-
             Api api = new Api(preference.getContext());
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-            String token = prefs.getString("api_token", "");
-            String url = prefs.getString("api_url", "");
-
             JSONObject params = new JSONObject();
             try {
-                params.put("token", token);
                 params.put("action", "test");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            url = url + "?json=[" + params.toString() + "]";
-            Log.v(TAG, "url: " + url);
-
-            api.execute(url);
+            api.execute(params);
 
             return false;
         }
@@ -184,26 +177,5 @@ public class SettingsActivity extends PreferenceActivity {
 
     private static void bindPreferenceToClick(Preference preference) {
       preference.setOnPreferenceClickListener(sBindPreferenceClickListener);
-    }
-
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
-            //onPreferenceClick(findPreference("test_settings"));
-        }
     }
 }
