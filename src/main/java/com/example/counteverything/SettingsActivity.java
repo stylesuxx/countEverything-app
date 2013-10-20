@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -111,8 +112,18 @@ public class SettingsActivity extends PreferenceActivity {
             Api api = new Api(preference.getContext());
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
             String token = prefs.getString("api_token", "");
-            String params = "?action=test&token=" + token;
-            String url = prefs.getString("api_url", "") + params;
+            String url = prefs.getString("api_url", "");
+
+            JSONObject params = new JSONObject();
+            try {
+                params.put("token", token);
+                params.put("action", "test");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            url = url + "?json=[" + params.toString() + "]";
+            Log.v(TAG, "url: " + url);
 
             api.execute(url);
 
