@@ -1,9 +1,14 @@
 package com.example.counteverything;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +19,10 @@ import java.net.URLConnection;
 
 /**
  * Created by stylesuxx on 10/14/13.
+ *
+ * The API.
  */
-public class Api extends AsyncTask<String, Void, String> {
+public class Api extends AsyncTask<JSONObject, Void, String> {
     private Exception exception;
     private final Context mContext;
     private final static String TAG = "API";
@@ -24,6 +31,90 @@ public class Api extends AsyncTask<String, Void, String> {
         this.mContext = context;
     }
 
+    /**
+     * This method is executed in background when the execute method is invoked on this Class.
+     *
+     * @param params A JSON object with the action and all needed parameters
+     * @return A string about Success or Error of the API call,
+     */
+    @Override
+    protected String doInBackground(JSONObject... params) {
+        int BUFFER_SIZE = 2000;
+        InputStream in = null;
+        String str = "";
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String token = prefs.getString("api_token", "");
+        String url = prefs.getString("api_url", "");
+        JSONObject p = params[0];
+        try {
+            p.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String URL = url +"?json=[" + p.toString() + "]";
+        Log.v(TAG, URL);
+
+        // Try to connect to the server
+        try {
+            in = OpenHttpConnection(URL);
+            if(in != null){
+                InputStreamReader isr = new InputStreamReader(in);
+                int charRead;
+                str = "";
+                char[] inputBuffer = new char[BUFFER_SIZE];
+                try {
+                    while ((charRead = isr.read(inputBuffer))>0){
+                        //---convert the chars to a String---
+                        String readString = String.copyValueOf(inputBuffer, 0, charRead);
+                        str += readString;
+                        inputBuffer = new char[BUFFER_SIZE];
+                    }
+                    in.close();
+                } catch (IOException e) {
+                    this.exception = e;
+                    return "Error";
+                }
+            }
+            else{
+                this.exception = new IOException("Check url.");
+                return "Error";
+            }
+        } catch (IOException e) {
+            this.exception = e;
+            return "Error";
+        }
+        try {
+            JSONObject json = new JSONObject(str);
+            return json.get("message").toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "JSON ERROR";
+    }
+
+    /**
+     * Executed after doInBackground returns. Prints a toast to notify the user about success
+     * or error of the API Request.
+     *
+     * @param str The return value of the background process
+     */
+    protected void onPostExecute(String str) {
+        if(str.equals("Error")) {
+            Toast.makeText(this.mContext, "Error: " + this.exception.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        else if (!str.isEmpty()) {
+            Toast.makeText(this.mContext, str, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Open an url and return an inputstream
+     *
+     * @param urlString The url to connect to
+     * @return Inputstream or null
+     * @throws IOException
+     */
     private InputStream OpenHttpConnection(String urlString) throws IOException {
         InputStream in = null;
         int response = -1;
@@ -51,60 +142,5 @@ public class Api extends AsyncTask<String, Void, String> {
             throw new IOException("Check API token.");
         }
         return in;
-    }
-
-    @Override
-    protected String doInBackground(String... strings) {
-        int BUFFER_SIZE = 2000;
-        InputStream in = null;
-        String str = "";
-        String URL = strings[0];
-
-        // Try to connect to the server
-        try {
-            in = OpenHttpConnection(URL);
-            if(in != null){
-                InputStreamReader isr = new InputStreamReader(in);
-                int charRead;
-                str = "";
-                char[] inputBuffer = new char[BUFFER_SIZE];
-                try {
-                    while ((charRead = isr.read(inputBuffer))>0)
-                    {
-                        //---convert the chars to a String---
-                        String readString = String.copyValueOf(inputBuffer, 0, charRead);
-                        str += readString;
-                        inputBuffer = new char[BUFFER_SIZE];
-                    }
-                    in.close();
-                } catch (IOException e) {
-                    //Toast.makeText(this.mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    this.exception = e;
-                    //e.printStackTrace();
-                    return "Error";
-                }
-            }
-            else{
-                this.exception = new IOException("Check url.");
-                return "Error";
-            }
-        } catch (IOException e) {
-            //Toast.makeText(this.mContext, e1.getMessage(), Toast.LENGTH_SHORT).show();
-            //e1.printStackTrace();
-            this.exception = e;
-            return "Error";
-        }
-
-        return str;
-    }
-
-    protected void onPostExecute(String str) {
-        if(str.equals("Error")) {
-            Log.v(TAG, "onPostExecute >> " + this.exception.getMessage());
-            Toast.makeText(this.mContext, this.exception.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        else if (!str.isEmpty()) {
-            Toast.makeText(this.mContext, "RESPONSE: " + str, Toast.LENGTH_SHORT).show();
-        }
     }
 }
