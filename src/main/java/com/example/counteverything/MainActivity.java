@@ -1,5 +1,6 @@
 package com.example.counteverything;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -13,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,6 +39,9 @@ public class MainActivity extends Activity {
     private DataAdapter mDbHelper;
     private Button btnAdd, btnDelete;
     private Spinner spinner;
+    private WebView webView;
+    Activity activity ;
+    private ProgressDialog progDailog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,30 @@ public class MainActivity extends Activity {
 
         btnDelete = (Button) findViewById(R.id.btn_item_delete);
         btnDelete.setOnClickListener(deleteItem);
+
+        activity = this;
+        webView = (WebView) findViewById(R.id.webView);
+        webView.getSettings().supportZoom();
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.setWebViewClient(new WebViewClient(){
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            //progDailog.show();
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+            public void onPageFinished(WebView view, final String url) {
+                //progDailog.dismiss();
+            }
+        });
+
+        webView.loadUrl("http://beer.1337.af");
     }
 
     /**
@@ -78,21 +111,20 @@ public class MainActivity extends Activity {
      */
     View.OnClickListener addItem = new View.OnClickListener() {
         public void onClick(View v) {
-            try{
-                int id = ((Button)v).getId();
-                String name = mDbHelper.getItemName(id);
-                float amount = mDbHelper.getItemAmount(id);
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(v.getContext());
-                String token = prefs.getString("api_token", "");
-                String params = "?action=add&token=" + token + "&item=" + URLEncoder.encode(name, "utf-8") + "&amount=" + amount;
-                String url = prefs.getString("api_url", "") + params;
+            int id = ((Button)v).getId();
+            String name = mDbHelper.getItemName(id);
+            float amount = mDbHelper.getItemAmount(id);
 
-                Log.v(TAG, "addItem >> " + name);
-
-                new Api(v.getContext()).execute(url);
-            } catch (UnsupportedEncodingException e) {
+            JSONObject json = new JSONObject();
+            try {
+               json.put("action", "add");
+               json.put("item", name);
+               json.put("amount", amount);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            new Api(v.getContext()).execute(json);
         }
     };
 
