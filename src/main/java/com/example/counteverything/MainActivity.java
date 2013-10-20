@@ -235,7 +235,6 @@ public class MainActivity extends Activity {
                 btnTag.setLayoutParams(params);
                 btnTag.setText("+");
                 btnTag.setId(id);
-                btnTag.setRight(0);
                 btnTag.setTextSize(30);
                 btnTag.setBackgroundColor(Color.GREEN);
                 btnTag.setOnClickListener(addItem);
