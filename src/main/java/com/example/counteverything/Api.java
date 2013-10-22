@@ -87,10 +87,9 @@ public class Api extends AsyncTask<JSONObject, Void, String> {
             JSONObject json = new JSONObject(str);
             return json.get("message").toString();
         } catch (JSONException e) {
-            e.printStackTrace();
+            this.exception = e;
+            return "Error";
         }
-
-        return "JSON ERROR";
     }
 
     /**
